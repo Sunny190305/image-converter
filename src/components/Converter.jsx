@@ -48,10 +48,11 @@ const Converter = () => {
         formData.append('format', format);
 
         try {
-            const response = await fetch('http://localhost:3000/api/convert', {
+            const response = await fetch('/api/convert', {
                 method: 'POST',
                 body: formData,
             });
+
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
