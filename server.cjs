@@ -112,12 +112,6 @@ app.post('/api/convert', upload.single('file'), async (req, res) => {
     }
 });
 
-// Export the app for serverless deployment
-module.exports = app;
-
-// Start the server only when this file is run directly (local development)
-if (require.main === module) {
-    app.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
-    });
-}
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
