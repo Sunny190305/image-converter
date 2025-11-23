@@ -1,16 +1,80 @@
-# React + Vite
+# Image Converter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application for converting images between different formats (JPG, PNG, WEBP, GIF, PDF) with a beautiful UI.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🖼️ Convert images to multiple formats
+- 📱 Drag & drop interface
+- ⚡ Fast conversion using Sharp library
+- 🎨 Modern, premium UI design
+- 🌐 Full-stack application with React + Express
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React, Vite, Framer Motion
+- **Backend**: Node.js, Express, Sharp, PDFKit
+- **Deployment**: Render
 
-## Expanding the ESLint configuration
+## Local Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+- Node.js 16+ installed
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Sunny190305/image-converter.git
+cd image-converter
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Run backend server:
+```bash
+npm run backend
+```
+
+4. Run frontend (in another terminal):
+```bash
+npm run dev
+```
+
+5. Open http://localhost:5173 in your browser
+
+## Deployment on Render
+
+### Backend Deployment
+
+1. Create a new **Web Service** on Render
+2. Connect your GitHub repository
+3. Configure:
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Environment**: Node
+
+### Frontend Deployment
+
+1. Create a new **Static Site** on Render
+2. Connect your GitHub repository
+3. Configure:
+   - **Build Command**: `npm install && npm run build`
+   - **Publish Directory**: `dist`
+   - **Environment Variable**: 
+     - Key: `VITE_API_URL`
+     - Value: Your backend URL (e.g., `https://your-backend.onrender.com`)
+
+## Environment Variables
+
+### Frontend
+- `VITE_API_URL`: Backend API URL (defaults to `http://localhost:3000` for local development)
+
+See `.env.example` for reference.
+
+## License
+
+MIT
