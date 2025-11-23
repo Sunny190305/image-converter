@@ -48,8 +48,7 @@ const Converter = () => {
         formData.append('format', format);
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-            const response = await fetch(`${API_URL}/api/convert`, {
+            const response = await fetch('http://localhost:3000/api/convert', {
                 method: 'POST',
                 body: formData,
             });
