@@ -788,7 +788,7 @@ body::before {
 }
 
 .glass-panel:hover {
-  box-shadow: 
+  box-shadow:
     0 12px 40px 0 rgba(0, 0, 0, 0.5),
     0 0 30px rgba(102, 126, 234, 0.2);
   border-color: rgba(102, 126, 234, 0.3);
@@ -807,7 +807,7 @@ a[class*="button"] {
 button:hover:not(:disabled),
 a[class*="button"]:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 
+  box-shadow:
     0 12px 30px rgba(102, 126, 234, 0.5),
     0 0 20px rgba(102, 126, 234, 0.3);
 }
@@ -827,9 +827,12 @@ a[class*="button"]:active {
 
 /* Smooth Fade on Cursor Proximity */
 @keyframes fadeGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.8;
   }
+
   50% {
     opacity: 1;
   }
@@ -899,7 +902,7 @@ input:focus,
 select:focus,
 textarea:focus {
   transform: scale(1.01);
-  box-shadow: 
+  box-shadow:
     0 0 0 3px rgba(102, 126, 234, 0.1),
     0 4px 12px rgba(102, 126, 234, 0.2);
 }
@@ -910,6 +913,7 @@ textarea:focus {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -921,6 +925,7 @@ textarea:focus {
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -932,6 +937,7 @@ textarea:focus {
     opacity: 0;
     transform: translateX(30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -962,9 +968,12 @@ img:hover {
 
 /* Enhanced Background Gradient Animation */
 @keyframes gradientShift {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
@@ -1005,18 +1014,18 @@ img:hover {
   .cursor-glow {
     display: none !important;
   }
-  
+
   [data-parallax] {
     transform: none !important;
   }
-  
+
   .glass-panel,
   .neon-button,
   button,
   a[class*="button"] {
     transform: none !important;
   }
-  
+
   .glass-panel:hover,
   .neon-button:hover,
   button:hover,
@@ -1031,6 +1040,7 @@ img:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -1038,8 +1048,94 @@ img:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .cursor-glow {
     display: none !important;
+  }
+}
+
+/* ============================================
+   CUSTOM CURSOR STYLES
+   ============================================ */
+
+/* Custom Cursor Dot (Inner Circle) */
+.custom-cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+  will-change: transform;
+}
+
+/* Custom Cursor Ring (Outer Circle) */
+.custom-cursor-ring {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(102, 126, 234, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.4);
+  will-change: transform, opacity, border-width;
+}
+
+/* Mouse-move Background Glow */
+.cursor-bg-glow {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+  filter: blur(40px);
+}
+
+/* Click Pulse Animation */
+@keyframes cursorPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Hide default cursor on desktop */
+@media (hover: hover) and (pointer: fine) {
+
+  body,
+  body * {
+    cursor: none !important;
+  }
+}
+
+/* Show default cursor on mobile/touch devices */
+@media (hover: none) or (pointer: coarse) {
+
+  .custom-cursor-dot,
+  .custom-cursor-ring,
+  .cursor-bg-glow {
+    display: none !important;
+  }
+
+  body,
+  body * {
+    cursor: auto !important;
   }
 }
