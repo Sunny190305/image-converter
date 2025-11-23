@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const CursorEffects = () => {
   const cursorGlowRef = useRef(null);
+  const cursorDotRef = useRef(null);
+  const cursorRingRef = useRef(null);
+  const cursorBgGlowRef = useRef(null);
   const parallaxRef = useRef({ x: 0, y: 0 });
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isMoving, setIsMoving] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const isMovingRef = useRef(false);
+  const isClickingRef = useRef(false);
+  const isHoveringRef = useRef(false);
   const movingTimeoutRef = useRef(null);
 
   useEffect(() => {
@@ -21,6 +23,10 @@ const CursorEffects = () => {
     if (isTouchDevice || !hasHover) return;
 
     const cursorGlow = cursorGlowRef.current;
+    const cursorDot = cursorDotRef.current;
+    const cursorRing = cursorRingRef.current;
+    const cursorBgGlow = cursorBgGlowRef.current;
+
     let mouseX = 0;
     let mouseY = 0;
     let currentX = 0;
@@ -31,9 +37,27 @@ const CursorEffects = () => {
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Update cursor position for custom cursor
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-      setIsMoving(true);
+      // Update cursor position instantly via transform
+      if (cursorDot) {
+        cursorDot.style.left = `${e.clientX}px`;
+        cursorDot.style.top = `${e.clientY}px`;
+      }
+      if (cursorRing) {
+        cursorRing.style.left = `${e.clientX}px`;
+        cursorRing.style.top = `${e.clientY}px`;
+      }
+      if (cursorBgGlow) {
+        cursorBgGlow.style.left = `${e.clientX}px`;
+        cursorBgGlow.style.top = `${e.clientY}px`;
+      }
+
+      // Handle moving state
+      if (!isMovingRef.current) {
+        isMovingRef.current = true;
+        if (cursorRing) {
+          cursorRing.style.transform = 'translate(-50%, -50%) scale(1.1)';
+        }
+      }
 
       // Clear existing timeout
       if (movingTimeoutRef.current) {
@@ -42,13 +66,29 @@ const CursorEffects = () => {
 
       // Set timeout to detect when mouse stops
       movingTimeoutRef.current = setTimeout(() => {
-        setIsMoving(false);
-      }, 150);
+        isMovingRef.current = false;
+        if (cursorRing && !isHoveringRef.current && !isClickingRef.current) {
+          cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
+        }
+      }, 100);
 
       // Check if hovering over interactive elements
       const target = e.target;
       const isInteractive = target.closest('button, a, [data-hover], input, select, .cursor-pointer, .glass-panel');
-      setIsHovering(!!isInteractive);
+      const wasHovering = isHoveringRef.current;
+      isHoveringRef.current = !!isInteractive;
+
+      if (isHoveringRef.current !== wasHovering && cursorRing) {
+        if (isHoveringRef.current) {
+          cursorRing.style.transform = 'translate(-50%, -50%) scale(1.5)';
+          cursorRing.style.opacity = '0.8';
+          cursorRing.style.borderWidth = '3px';
+        } else {
+          cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
+          cursorRing.style.opacity = '1';
+          cursorRing.style.borderWidth = '2px';
+        }
+      }
 
       // Update parallax values
       parallaxRef.current = {
@@ -66,12 +106,25 @@ const CursorEffects = () => {
 
     // Mouse down handler
     const handleMouseDown = () => {
-      setIsClicking(true);
+      isClickingRef.current = true;
+      if (cursorDot) {
+        cursorDot.style.transform = 'translate(-50%, -50%) scale(0.5)';
+      }
+      if (cursorRing) {
+        cursorRing.style.transform = 'translate(-50%, -50%) scale(0.8)';
+      }
     };
 
     // Mouse up handler
     const handleMouseUp = () => {
-      setIsClicking(false);
+      isClickingRef.current = false;
+      if (cursorDot) {
+        cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
+      }
+      if (cursorRing) {
+        const scale = isHoveringRef.current ? 1.5 : isMovingRef.current ? 1.1 : 1;
+        cursorRing.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
     };
 
     // Smooth animation loop for cursor glow
@@ -164,33 +217,26 @@ const CursorEffects = () => {
 
       {/* Custom Cursor Dot */}
       <div
+        ref={cursorDotRef}
         className="custom-cursor-dot"
         style={{
-          left: `${cursorPosition.x}px`,
-          top: `${cursorPosition.y}px`,
-          transform: `translate(-50%, -50%) scale(${isClicking ? 0.5 : 1})`,
+          transform: 'translate(-50%, -50%)',
         }}
       />
 
       {/* Custom Cursor Ring */}
       <div
+        ref={cursorRingRef}
         className="custom-cursor-ring"
         style={{
-          left: `${cursorPosition.x}px`,
-          top: `${cursorPosition.y}px`,
-          transform: `translate(-50%, -50%) scale(${isClicking ? 0.8 : isHovering ? 1.5 : isMoving ? 1.1 : 1})`,
-          opacity: isHovering ? 0.8 : 1,
-          borderWidth: isHovering ? '3px' : '2px',
+          transform: 'translate(-50%, -50%)',
         }}
       />
 
       {/* Mouse-move Background Glow */}
       <div
+        ref={cursorBgGlowRef}
         className="cursor-bg-glow"
-        style={{
-          left: `${cursorPosition.x}px`,
-          top: `${cursorPosition.y}px`,
-        }}
       />
     </>
   );
